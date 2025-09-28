@@ -15,11 +15,11 @@ public class LocalOpenSecurityConfig {
   @Bean
   public SecurityFilterChain openSecurityFilterChain(HttpSecurity http) throws Exception {
     http
-      .csrf(csrf -> csrf.disable())                 // 로컬 테스트 편의
-      .authorizeHttpRequests(auth -> auth
-        .anyRequest().permitAll()                   // 전면 허용
-      )
-      .formLogin(form -> form.disable());
+      .csrf().disable()                             // 로컬 테스트 편의
+      .authorizeRequests()
+      .anyRequest().permitAll()                   // 전면 허용
+      .and()
+      .formLogin().disable();
 
     return http.build();
   }

@@ -6,7 +6,7 @@ import com.ims.eims.dto.NoticeListDto;
 import com.ims.eims.dto.NoticeUpdateRequestDto;
 import com.ims.eims.service.NoticeService;
 
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

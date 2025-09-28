@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
+    Notice findById(Long id);
+
     // Spring Data JPA Query Derivation:
     // Finds all active notices that are within the valid date range
     List<Notice> findByIsActiveTrueAndStartDateBeforeAndEndDateAfterOrderByIsPinnedDescCreatedAtDesc(LocalDateTime now1, LocalDateTime now2);

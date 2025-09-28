@@ -1,6 +1,6 @@
 package com.ims.eims.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class NoticeCreateRequestDto {
-    @NotBlank(message = "Title is required")
+    @NotNull(message = "Title is required")
     private String title;
     
-    @NotBlank(message = "Content is required")
+    @NotNull(message = "Content is required")
     private String content;
 
     private LocalDateTime startDate;
