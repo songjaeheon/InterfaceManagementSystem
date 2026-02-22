@@ -9,8 +9,10 @@ import com.ims.eims.service.NoticeService;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,10 +26,12 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
-    // Endpoint for creating a new notice
-    @PostMapping
-    public ResponseEntity<NoticeDto> createNotice(@Valid @RequestBody NoticeCreateRequestDto request) {
-        NoticeDto createdNotice = noticeService.createNotice(request);
+    // Endpoint for creating a new notice with file upload
+    // "Look at this! We're handling multipart requests with ease. Just inject the MultipartFile and let Spring do the rest."
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<NoticeDto> createNotice(@ModelAttribute @Valid NoticeCreateRequestDto request,
+                                                  @RequestParam(value = "file", required = false) MultipartFile file) {
+        NoticeDto createdNotice = noticeService.createNotice(request, file);
         return new ResponseEntity<>(createdNotice, HttpStatus.CREATED);
     }
 
@@ -43,6 +47,7 @@ public class NoticeController {
     }
 
     // Endpoint for retrieving the list of active notices
+    // "And here we fetch the active notices. Thanks to our service layer caching, this is blazing fast!"
     @GetMapping
     public ResponseEntity<List<NoticeListDto>> getActiveNotices() {
         List<NoticeListDto> notices = noticeService.findActiveNotices();

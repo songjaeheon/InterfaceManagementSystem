@@ -14,13 +14,15 @@ public class NoticeDto {
     private String content;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private String attachmentPath;
 
-    public NoticeDto(Long id, String title, String content, LocalDateTime startDate, LocalDateTime endDate) {
+    public NoticeDto(Long id, String title, String content, LocalDateTime startDate, LocalDateTime endDate, String attachmentPath) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.attachmentPath = attachmentPath;
     }
     // Getters
 }

@@ -1,15 +1,10 @@
 package com.ims.eims.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -30,12 +25,23 @@ public class Notice {
     private LocalDateTime endDate;
     private boolean isActive;
     private boolean isPinned;
+
+    private String attachmentPath;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // Default constructor for JPA
     public Notice() {}
 
-    // Getters and Setters (omitted for brevity)
-    // You can use Lombok to reduce boilerplate
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
