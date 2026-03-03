@@ -4,10 +4,13 @@ import com.ims.eims.dto.NoticeCreateRequestDto;
 import com.ims.eims.dto.NoticeDto;
 import com.ims.eims.dto.NoticeListDto;
 import com.ims.eims.dto.NoticeUpdateRequestDto;
+import com.ims.eims.entity.NoticeFile;
 import com.ims.eims.service.NoticeService;
 
 import javax.validation.Valid;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +29,13 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
-    // Endpoint for creating a new notice with file upload
-    // "Look at this! We're handling multipart requests with ease. Just inject the MultipartFile and let Spring do the rest."
+    // Endpoint for creating a new notice with robust multi-file upload
+    // "Look at this! We're handling multipart requests with ease.
+    // Just inject the List of MultipartFiles and let Spring do the rest. Beautiful!"
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<NoticeDto> createNotice(@ModelAttribute @Valid NoticeCreateRequestDto request,
-                                                  @RequestParam(value = "file", required = false) MultipartFile file) {
-        NoticeDto createdNotice = noticeService.createNotice(request, file);
+                                                  @RequestParam(value = "files", required = false) List<MultipartFile> files) {
+        NoticeDto createdNotice = noticeService.createNotice(request, files);
         return new ResponseEntity<>(createdNotice, HttpStatus.CREATED);
     }
 
@@ -74,5 +78,17 @@ public class NoticeController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // "And finally, let's get those files back to the user! We use a ResponseEntity with a Resource
+    // and the proper Content-Disposition header so the browser knows exactly what to do. Beautiful!"
+    @GetMapping("/files/{fileId}/download")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
+        Resource resource = noticeService.loadFileAsResource(fileId);
+        NoticeFile noticeFile = noticeService.getNoticeFile(fileId);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + noticeFile.getOriginalFilename() + "\"")
+                .body(resource);
     }
 }

@@ -26,13 +26,25 @@ public class Notice {
     private boolean isActive;
     private boolean isPinned;
 
-    private String attachmentPath;
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private java.util.List<NoticeFile> files = new java.util.ArrayList<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // Default constructor for JPA
     public Notice() {}
+
+    // Helper method for bi-directional relationship
+    public void addFile(NoticeFile file) {
+        files.add(file);
+        file.setNotice(this);
+    }
+
+    public void removeFile(NoticeFile file) {
+        files.remove(file);
+        file.setNotice(null);
+    }
 
     @PrePersist
     public void prePersist() {
